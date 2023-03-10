@@ -13,7 +13,7 @@ function ask(questionText) {
 //! DO NOT TOUCH CODE ABOVE 
 start();
 let currentLocation = "roomOne"; // show players current location
-let currentInventory = ""; // player has no starting inventory
+let currentInventory = []; // player has no starting inventory
 let playerInventory = [];
 
 
@@ -27,9 +27,9 @@ class rooms {
 }
 // Create Object for rooms class
 let roomOne = new rooms("frontDoor","You are standing at the front door of the Reid family home. On the door is small piece of paper taped to the front door. It is folded over and clicking against the door from the relentless wind.", "letter");
-let roomTwo = new rooms("foyer", "blah blah blah", "bread");
-let roomThree = new rooms("living room", "blah blah blah", "jar of peanut butter");
-let roomFour = new rooms("kitchen", "blah blah blah", "knife");
+let roomTwo = new rooms("foyer", "You have stepped into the Reid's home and can see the downstairs foyer. It is a tidy space with a staircase to your right. When you look around you can see loaf of bread on the first step.", "bread");
+let roomThree = new rooms("living room", "You have traveled up the stairs and are standing in the living room. You can see several pictures on the wall of the Reid children playing. In the middle of the room, however, something catches your eye. It is a single stool with a giant jar of peanut butter.", "jar of peanut butter");
+let roomFour = new rooms("kitchen", "You have successfully journeyed to the best part of the house- the kitchen! Here you see your normal modern appliances and a few mason jars on the counter. There is a knife taunting you from the top of the stove.", "knife");
 
 
 let locationTable = {
@@ -98,20 +98,42 @@ let answer = await ask(welcomeMessage);
 
 while (answer !== 'exit') {
   if (answer == "read letter", "open letter", "letter", "read note", "open note", "note") {
-    currentLocation = roomOne
-    moveRooms("roomOne"); // get player to move first and then add inventory functions
-    //readLetter();
+    playerInventory.push("letter");
+    currentInventory = "letter";
+    readLetter();
+    let letterResponse = await ask(`${readLetter}`)
+    if (letterResponse == "knock knock knock") {
+    currentLocation = "roomOne"
+    moveRooms("roomTwo"); // get player to move first and then add inventory functions 
+    secondRoom(); 
+    } else { "The door is still locked..."
+    returnLetter();}
   } else if (answer == "open door", "door handle", "open", "door") {
     console.log('The door is locked')
    return ask();
   } else {console.log(`I don't know that ${answer}`) 
   return ask();} 
-
-
-
 }
 
+async function secondRoom() {
+currentLocation = "roomTwo"
+let answerTwo = await ask(console.log(locationTable[currentLocation].description))
 
+while (answerTwo !== 'exit') {
+  if (answerTwo == "bread", "pick up bread", "grab bread", "take bread") {
+    playerInventory.push("bread");
+    currentInventory = "bread";
+    let letterResponse = await ask(`You have picked up the bread and can go upstairs. Thanks for helping out.`)
+    currentLocation = "roomOne"
+    moveRooms("roomTwo"); // get player to move first and then add inventory functions 
+    //thirdRoom(); 
+  } else if (answer == "walk upstairs", "upstairs", "stairs") {
+    console.log('You cannot go up without helping with groceries')
+   return ask();
+  } else {console.log(`I don't know that ${answer}`) 
+  return ask();} 
+}
+}
 
  // async function letsBegin() {
   //   let firstMove = await ask(`\n type walk`)
@@ -128,27 +150,25 @@ while (answer !== 'exit') {
 // Create function to move from room to room - IT WORKS
 function moveRooms(newLocation) {
     let locationTransition = stateLocation[currentLocation];
-
+    console.log(locationTransition);
     if(locationTransition.includes(newLocation)) {
       currentLocation = newLocation;
       console.log(`You made it through, you are now in the ${locationTable[currentLocation].name}`);
-    } else { console.log(`You cannot go from the ${currentLocation} to the ${newLocation}`)}
+      process.exit();
+    } else { console.log(`You cannot go from the ${currentLocation} to the ${newLocation}`)
+    
+    process.exit();
+    secondRoom();
+  }
 
 
 }
 
 
 
-// Testing function - IT WORKS
-//moveRooms("driveWay");
-//moveRooms("roomOne");
-//moveRooms("roomTwo");
-//moveRooms("roomThree");
-
-
 // Create Class for items
 
-
+// Create function to pick up inventory
 function pickUpInventory(newInventory) {
   let inventoryTransition = stateInventory[currentInventory];
 
@@ -159,10 +179,14 @@ function pickUpInventory(newInventory) {
 
 
 }
-pickUpInventory();
 
-function readLetter() {
-  console.log(inventory[letter].description);
+
+async function readLetter() {
+  console.log(inventoryTable[currentInventory].description);
+  if (answer == "knock knock knock") {
+
+  }
+  
 }
 // Create array for player
 // create function of picking up dropping inventory (while? conditional?)
